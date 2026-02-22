@@ -51,62 +51,164 @@
 		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
 
 		<h2>Task 1: Drawing Single-Color Triangles</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		To rasterize triangles, simply check if each pixel is inside the triangle, then call the fill_pixel function.
+		<ol>
+			<li>Determine the winding order of the triangle vertices by calculating the Vector2D cross product of any two edge vectors from the same point. Positive values indicate counterclockwise order. Note that on the screen, this appears to be clockwise instead because convention has the positive y-axis pointing downwards.</li>
+			<li>For each pixel, do a line test for each edge of the triangle to determine if the pixel should be colored. 
+				<ol type="a">
+					<li>Normal vector N = <-y, x>.</li>
+					<li>Vector V is from the same vertex origin as N, pointing to the pixel of interest. </li>
+					<li>Dot product A·B = |A||B|cos𝜃 can indicate if the point is on the same side of the line as N, with 𝜃 being the angle between A, B, since cosine is only positive for 𝜃 between (-90, 90).</li>
+				</ol>
+			</li>
+			<li>If all dot products have the correct sign, call fill_pixel().</li>
+		</ol>
+		<br>Performance: My algorithm is no worse than one that checks each sample within the bounding box because I also create a bounding box at the beginning based on the min and max xy values, and only check points within this box. Additionally, I have made optimizations that have drastically reduced rendering time.
+		<br>Extra Credit: I made two optimizations. First, I removed redundant arithmetic involved in line testing outside of the nested loops. This made the greatest speedups, as I found the repeated initialization of a std::vector<Vector2D> was a major bottleneck in speed. Second, I created a boolean to allow for an early break from the inner loop if the necessary pixels of the column have already been drawn. This only decreases rendering time by at most 1 ms for the basic/test3.svg.
+		<table>
+			<tr>
+				<th>optimization</th>
+				<th>basic/text3.svg render time (seconds)</th>
+			</tr>
+			<tr>
+				<td>unoptimized</td>
+				<td>0.074841</td>
+			</tr>
+			<tr>
+				<td>std::vector norms outside loops</td>
+				<td>0.041603</td>
+			</tr>
+			<tr>
+				<td>std::vector points moved outside loops</td>
+				<td>0.007952</td>
+			</tr>
+			<tr>
+				<td>early break bool</td>
+				<td>0.006994</td>
+			</tr>
+		</table>
 
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
+		<br> As shown below, triangles can now be rasterized. However, they have aliasing like jaggies, as well as detached corners (red, pink triangles)
+		<figure>
+			<img src="t1.png" alt="Task1" style="width:50%"/>
+			<figcaption>basic/test4.svg</figcaption>
+		</figure>
+		
+		<h2>Task 2: Antialiasing by Supersampling</h2>
+		Supersampling allows us to resolve aliasing errors like ‘jaggies’ that occur due to insufficient sampling. By ‘mixing’ the colors a pixel is responsible for, we can get a smoother image. Modifications I made:
+		<ol>
+			<li>Update the set_sample_rate() and set_framebuffer_target() methods appropriately; specifically the sample_buffer.resize() method to scale the buffer accordingly by our sample_rate.</li>
+			<li>Update resolve_to_framebuffer() to take the average color of the responsible samples. Collect the sample Color values into one, then divide by the sample_rate.</li>
+			<li>Update rasterize_triangle(). This was mostly just scaling the bounding box coordinates and consequently V vector construction, but since vectors are just direction and magnitude, others don’t need to be changed. Also, write to sample_buffer rather than calling fill_pixel()</li>
+			<li>Update fill_pixel by filling all supersamples for the pixel with the color.</li>
+		</ol>
+
+
+		<p>Here is basic/test4.svg rendered with 1, 4, and 16 sample rates. The jaggies smooth out as sample rate increases, and the triangles no longer disconnect</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="lion.jpg" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="t2-1spp" width="400px"/>
+				  <figcaption>sample_rate=1</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="lion.jpg" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-			  </tr>
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="lion.jpg" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="t2-4spp" width="400px"/>
+				  <figcaption>sample_rate=4</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="lion.jpg" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="t2-16spp" width="400px"/>
+				  <figcaption>sample_rate=16</figcaption>
 				</td>
 			  </tr>
 			</table>
 		</div>
-		
-		<h2>Task 2: Antialiasing by Supersampling</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 		<h2>Task 3: Transforms</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+		For this task, I made the cubeman lie down. First, envelope his entire body with a 90 degree rotation, which cascades down to the limbs through the hierarchical structure. Then, working outwards, reposition the limbs so that the cubeman is comfortable. 
+		
+		<figure>
+			<img src="t3-cubeman.png" alt="Task3" style="width:50%"/>
+			<figcaption>Cubeman, Resting</figcaption>
+		</figure>
+			
 		<h2>Task 4: Barycentric coordinates</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		Barycentric coordinates tell you where a point is relative to the vertices of a triangle. For a point P within a triangle XYZ, barycentric coordinates act like sliders from 0 to 1, where 1 indicates the point is close to the corresponding vertex. (1, 0, 0) means P is at A. The triangle shown on the right has red, green, and blue at each of the vertices. The barycentric coordinates are used to weight the colors at each pixel, showing how these coordinates balance themselves as they near a different corner. This quality allows smooth interpolation of values across a triangle. 
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="t4-color_wheel" width="400px"/>
+				  <figcaption>Color Wheel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="t4-rgb_tri" width="400px"/>
+				  <figcaption>RGB Triangle</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+
+			
 
 		<h2>Task 5: "Pixel sampling" for texture mapping</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		Pixel sampling is used to create a new digital image from an old or analog photo. It’s like choosing a color or value for each pixel on the screen to best represent the sampled object. Texture mapping, which manipulates a 2D image into different shapes, uses pixel sampling to get each texel for the corresponding pixel. Nearest pixel sampling rounds to the closest texel, returning the color of the texel. Bilinear pixel sampling is a little more precise, getting the color at the same ratio between surrounding texel coordinates by interpolating the four texel coordinates bounding the point. 
+		<br> Bilinear produces slightly smoother and more consistent lines than the nearest pixel, as seen in the border between the campanile and the sky in the pixel inspector. However, the calculations to sample the correct spot may add some time for performance. Nearest pixel is most efficient, but can have some strange aliasing depending on luck and pixel sampling alignment.
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="t5-bi-1spp.png" width="400px"/>
+				  <figcaption>bilinear, 1spp</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="t5-near-1spp.png" width="400px"/>
+				  <figcaption>nearest, 1spp</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="t5-bi-16spp.png" width="400px"/>
+				  <figcaption>bilinear, 16spp</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="t5-near-16spp.png" width="400px"/>
+				  <figcaption>nearest, 16spp</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<br>Typically, there won’t be too huge of a difference between the two methods, unless the nearest pixel happens to always be very different from the image at the area, due to noise or other reasons. In fact, this can sometimes hide images within images.
+		
 
 		<h2>Task 6: "Level Sampling" with mipmaps for texture mapping</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<h2>(Optional) Task 7: Extra Credit - Draw Something Creative!</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
-		</ul>
+		Level sampling allows us to ensure each pixel gets a value that properly represents the textures it is responsible for. When the image is stretched, many pixels are responsible for few texels. Similarly, when squished, few pixels are responsible for many texels. To avoid the aliasing, we pre-blend the image by different amounts to create different levels of blur. Then, level sampling chooses the appropriate level based on the distortion. 
+		<br>Supersampling produces the best results, but scales with sample_rate in terms of memory and speed. It’s best suited for detailed scenes that don’t need to be rendered in real-time. Pixel sampling selection comes at relatively low cost for both, with decent performance. Level sampling is also a high cost technique, as it requires the generation of many different levels of blurring (mip maps), which takes up about 4/3 more space as well as initial start time. During rasterization, it also has some speed cost for the calculation of levels for each pixel sampling. 
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="t6-L0-PL.png" width="400px"/>
+				  <figcaption>level 0, bilinear pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="t6-L0-PN.png" width="400px"/>
+				  <figcaption>level 0, nearest pixel</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="t6-LN-PL" width="400px"/>
+				  <figcaption>nearest level, linear pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="t6-LN-PN" width="400px"/>
+				  <figcaption>nearest level, nearest pixel</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 		</div>
 	</body>
 </html>
