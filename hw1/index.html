@@ -27,12 +27,12 @@
 	</head>
 	<body>
 		<div class="container">
-		<h1>CS184/284A Spring 2025 Homework 1 Write-Up</h1>
-		<div style="text-align: center;">Names: </div>
+		<h1>CS184/284A Spring 2026 Homework 1 Write-Up</h1>
+		<div style="text-align: center;">Names: Sophia Liu </div>
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-vlissomar/hw1/index.html">cs184.eecs.berkeley.edu/sp25</a>
 		
 		<br>
 
@@ -40,7 +40,7 @@
 
 		<figure>
 			<img src="lion.jpg" alt="Lion" style="width:50%"/>
-			<figcaption>You can add images with captions!</figcaption>
+			<figcaption>Hello!</figcaption>
 		</figure>
 
 		<!--
@@ -48,7 +48,7 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+		This assignment gave me insight into the very basics of how things are rendered from basic triangles, as well as many sampling techniques to avoid aliasing of my images. I found barycentric coordinates to be one of the most interesting things, as it can easily let us blend colors or stretch an image onto a triangle, which can then be pieced together to make more complicated 3D objects in the future.
 
 		<h2>Task 1: Drawing Single-Color Triangles</h2>
 		To rasterize triangles, simply check if each pixel is inside the triangle, then call the fill_pixel function.
@@ -109,15 +109,15 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="t2-1spp" width="400px"/>
+				  <img src="t2-1spp.png" width="400px"/>
 				  <figcaption>sample_rate=1</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="t2-4spp" width="400px"/>
+				  <img src="t2-4spp.png" width="400px"/>
 				  <figcaption>sample_rate=4</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="t2-16spp" width="400px"/>
+				  <img src="t2-16spp.png" width="400px"/>
 				  <figcaption>sample_rate=16</figcaption>
 				</td>
 			  </tr>
@@ -138,12 +138,12 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="t4-color_wheel" width="400px"/>
+				  <img src="t4-color_wheel.png" width="400px"/>
 				  <figcaption>Color Wheel</figcaption>
 				</td>
 				<td style="text-align: center;">
 				  <img src="t4-rgb_tri" width="400px"/>
-				  <figcaption>RGB Triangle</figcaption>
+				  <figcaption>RGB Triangle.png</figcaption>
 				</td>
 			  </tr>
 			</table>
@@ -199,11 +199,11 @@
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="t6-LN-PL" width="400px"/>
+				  <img src="t6-LN-PL.png" width="400px"/>
 				  <figcaption>nearest level, linear pixel</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="t6-LN-PN" width="400px"/>
+				  <img src="t6-LN-PN.png" width="400px"/>
 				  <figcaption>nearest level, nearest pixel</figcaption>
 				</td>
 			  </tr>
