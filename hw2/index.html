@@ -56,8 +56,8 @@
 		<ul>
 			<li>Briefly explain de Casteljau’s algorithm and how you implemented it in order to evaluate Bezier curves.</li>
 		</ul>
-		Casteljau’s algorithm puts a slider between each consecutive pair of n control points to create n - 1 intermediary points, repeating until there is only 1 point left. These sliders use the same input t as a measure of how far along the intermediary point is between the preceding and following points. Then, to draw out the curve, we take the path traced by the last point as t slides from 0 to 1. <br>
-	For my implementation, I am only responsible for evaluating each step (creating new control points). I iterate over the vector of 2D points while tracking the point from the previous iteration. Then, I simply plug in the previous point p0 and the current point p into our lerp expression: (1 - t) * p0 + t * p, and append the new point into our returning vector. 
+		    Casteljau’s algorithm puts a slider between each consecutive pair of n control points to create n - 1 intermediary points, repeating until there is only 1 point left. These sliders use the same input t as a measure of how far along the intermediary point is between the preceding and following points. Then, to draw out the curve, we take the path traced by the last point as t slides from 0 to 1. <br>
+		    For my implementation, I am only responsible for evaluating each step (creating new control points). I iterate over the vector of 2D points while tracking the point from the previous iteration. Then, I simply plug in the previous point p0 and the current point p into our lerp expression: (1 - t) * p0 + t * p, and append the new point into our returning vector. 
 		<ul>
 			<li>Take a look at the provided .bzc files and create your own Bezier curve with 6 control points of your choosing. Use this Bezier curve for your screenshots below.
 			<ul>
@@ -114,9 +114,9 @@
 		<ul>
 			<li>Briefly explain how de Casteljau algorithm extends to Bezier surfaces and how you implemented it in order to evaluate Bezier surfaces.</li>
 		</ul>
-		To get a Bezier surface with de Casteljau’s algorithm, start with the typical algorithm along one dimension. Then, using a cross section of these curves as control points, apply the algorithm again along the remaining dimension. This produces a smooth curved surface, since each cross section should have points very close to the previous one, so each curve is connected to the previous one. <br>
+		    To get a Bezier surface with de Casteljau’s algorithm, start with the typical algorithm along one dimension. Then, using a cross section of these curves as control points, apply the algorithm again along the remaining dimension. This produces a smooth curved surface, since each cross section should have points very close to the previous one, so each curve is connected to the previous one. <br>
 			
-The implementation in the homework only requires the code to find where the point is in 3D when given the interpolation ‘slider’ values, u and v. As outlined above, collect the control points from the 1D Bezier point at u from the inner vectors of controlPoints, then return the 1D Bezier point at v from these control points.
+		    The implementation in the homework only requires the code to find where the point is in 3D when given the interpolation ‘slider’ values, u and v. As outlined above, collect the control points from the 1D Bezier point at u from the inner vectors of controlPoints, then return the 1D Bezier point at v from these control points.
 		<ul>
 			<li>Show a screenshot of bez/teapot.bez (not .dae) evaluated by your implementation.</li>
 		</ul>
@@ -133,7 +133,7 @@ The implementation in the homework only requires the code to find where the poin
 		<ul>
 			<li>Briefly explain how you implemented the area-weighted vertex normals.</li>
 		</ul>
-My implementation assumes that the given vertex is not a boundary vertex. To compute area-weighted vertex normals, I iterate through the halfedges of the vertex using a while loop, updating the current ‘focus’ halfedge curr to be curr->twin()->next(). For each curr halfedge, I record the vertices of its associated triangle, then calculate the crossproduct of (B - A, C - A) where A, B, C are vertex positions. This cross product has a convenient quality of having a direction along the normal vector and a magnitude equal to twice the triangle area, and can be directly accumulated in our vertex’s normal vector. The constant scaling factor of 2 can be ignored since the function returns a normalized unit vector. 
+		    My implementation assumes that the given vertex is not a boundary vertex. To compute area-weighted vertex normals, I iterate through the halfedges of the vertex using a while loop, updating the current ‘focus’ halfedge curr to be curr->twin()->next(). For each curr halfedge, I record the vertices of its associated triangle, then calculate the crossproduct of (B - A, C - A) where A, B, C are vertex positions. This cross product has a convenient quality of having a direction along the normal vector and a magnitude equal to twice the triangle area, and can be directly accumulated in our vertex’s normal vector. The constant scaling factor of 2 can be ignored since the function returns a normalized unit vector. 
 		<ul>
 			<li>Show screenshots of dae/teapot.dae (not .bez) comparing teapot shading with and without vertex normals. Use Q to toggle default flat shading and Phong shading.</li>
 		</ul>
@@ -205,7 +205,7 @@ My implementation assumes that the given vertex is not a boundary vertex. To com
 		<figure>
 			<img src="s2p4-what.png" alt="What" style="width:50%"/>
 		</figure>
-		Not quite sure what's happening here, but it looks cool. As for debugging...I just deleted my code and redid it. ദ്ദി╥ ᴗ ╥)
+		    Not quite sure what's happening here, but it looks cool. As for debugging...I just deleted my code and redid it. ദ്ദി╥ ᴗ ╥)
 
 		<h3>Part 5: Edge split</h3>
 		<ul>
@@ -213,8 +213,8 @@ My implementation assumes that the given vertex is not a boundary vertex. To com
 				Briefly explain how you implemented the edge split operation and describe any interesting implementation / debugging tricks you have used.
 			</li>
 		</ul>
-		Again, I start with determining which mesh elements need to be added and updated. Then, create a reference for any element that needs to be edited, and assign pointers. <br>
-		I split the process into two parts to better support boundary edge splits. First, the creation of a midpoint m. This also creates an edge and two halfedges. The faces remain the same, and your triangle mesh temporarily has two quads. Then, we split one side of this new edge. This creates one edge, two halfedges, and one face. I created a helper function (adding a header into HalfEdgeMesh.h) so boundary checking can simply call (or not call) the helper function for normal (and boundary) edge sides. 
+		    Again, I start with determining which mesh elements need to be added and updated. Then, create a reference for any element that needs to be edited, and assign pointers. <br>
+		    I split the process into two parts to better support boundary edge splits. First, the creation of a midpoint m. This also creates an edge and two halfedges. The faces remain the same, and your triangle mesh temporarily has two quads. Then, we split one side of this new edge. This creates one edge, two halfedges, and one face. I created a helper function (adding a header into HalfEdgeMesh.h) so boundary checking can simply call (or not call) the helper function for normal (and boundary) edge sides. 
 
 		<ul>
 			<li>
@@ -267,7 +267,7 @@ My implementation assumes that the given vertex is not a boundary vertex. To com
 				Briefly explain how you implemented the loop subdivision and describe any interesting implementation / debugging tricks you have used.
 			</li>
 		</ul>
-This part requires little thinking as the steps are already laid out. As recommended, I start by calculating vertex positions after loop subdivision. This involves two loops over the mesh: one over vertices for old vertex positions, and one over edges for new vertex positions. Then, I split each existing edge in the mesh. Initially, I just checked if the edge was marked isNew; this led to an infinite loop because a split edge is not registered as new, but is not meant to split again. Instead, check if either vertex on the end of the edge isNew, since only and all preexisting edges will have 2 old vertices. Next, loop over edges again to flip isNew edges with one old and one new vertex. Lastly, update all vertices with their newPosition attribute.
+		    This part requires little thinking as the steps are already laid out. As recommended, I start by calculating vertex positions after loop subdivision. This involves two loops over the mesh: one over vertices for old vertex positions, and one over edges for new vertex positions. Then, I split each existing edge in the mesh. Initially, I just checked if the edge was marked isNew; this led to an infinite loop because a split edge is not registered as new, but is not meant to split again. Instead, check if either vertex on the end of the edge isNew, since only and all preexisting edges will have 2 old vertices. Next, loop over edges again to flip isNew edges with one old and one new vertex. Lastly, update all vertices with their newPosition attribute.
 
 			
 		<ul>
@@ -275,7 +275,7 @@ This part requires little thinking as the steps are already laid out. As recomme
 				Take some notes, as well as some screenshots, of your observations on how meshes behave after loop subdivision. What happens to sharp corners and edges? Can you reduce this effect by pre-splitting some edges?
 			</li>
 		</ul>
-		Sharp corners and edges get rounded out in a way that isn’t representative of the original mesh. Pre-splitting edges can reduce to a certain extent, but can create other kinds of distortions in the mesh. Pre splitting works best when you split the edge line you are trying to observe, as opposed to placing more mesh lines in a similar direction. As shown below, this creates a jagged but 'straight' edge for the cube. 
+		    Sharp corners and edges get rounded out in a way that isn’t representative of the original mesh. Pre-splitting edges can reduce to a certain extent, but can create other kinds of distortions in the mesh. Pre splitting works best when you split the edge line you are trying to observe, as opposed to placing more mesh lines in a similar direction. As shown below, this creates a jagged but 'straight' edge for the cube. 
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
@@ -302,7 +302,7 @@ This part requires little thinking as the steps are already laid out. As recomme
 		<ul>
 			<li>Load dae/cube.dae. Perform several iterations of loop subdivision on the cube. Notice that the cube becomes slightly asymmetric after repeated subdivisions. Can you pre-process the cube with edge flips and splits so that the cube subdivides symmetrically? Document these effects and explain why they occur. Also explain how your pre-processing helps alleviate the effects.</li>
 		</ul>
-		The cube becomes asymmetric after subdivision because the mesh is not symmetric. The tilt is along the diagonal edge of each face. To get symmetric subdivision, the mesh simply needs to be more symmetric as well. Split the diagonal edge across each face so no corner is ‘favored’ before subdividing.
+		    The cube becomes asymmetric after subdivision because the mesh is not symmetric. The tilt is along the diagonal edge of each face. To get symmetric subdivision, the mesh simply needs to be more symmetric as well. Split the diagonal edge across each face so no corner is ‘favored’ before subdividing.
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
