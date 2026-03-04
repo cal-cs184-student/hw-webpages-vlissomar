@@ -57,7 +57,7 @@
 			<li>Briefly explain de Casteljau’s algorithm and how you implemented it in order to evaluate Bezier curves.</li>
 		</ul>
 		Casteljau’s algorithm puts a slider between each consecutive pair of n control points to create n - 1 intermediary points, repeating until there is only 1 point left. These sliders use the same input t as a measure of how far along the intermediary point is between the preceding and following points. Then, to draw out the curve, we take the path traced by the last point as t slides from 0 to 1. <br>
-	For my implementation, I am only responsible for evaluating each step (creating new control points). I iterate over the vector of 2D points while tracking the point from the previous iteration. Then, I simply plug in the previous point p0 and the current point p into our lerp expression: (1 - 5) * p0 + t * p, and append the new point into our returning vector. 
+	For my implementation, I am only responsible for evaluating each step (creating new control points). I iterate over the vector of 2D points while tracking the point from the previous iteration. Then, I simply plug in the previous point p0 and the current point p into our lerp expression: (1 - t) * p0 + t * p, and append the new point into our returning vector. 
 		<ul>
 			<li>Take a look at the provided .bzc files and create your own Bezier curve with 6 control points of your choosing. Use this Bezier curve for your screenshots below.
 			<ul>
