@@ -170,40 +170,177 @@ My implementation assumes that the given vertex is not a boundary vertex. To com
 		</div>
 
 		<h3>Part 4: Edge flip</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<ul>
+			<li>
+				Briefly explain how you implemented the edge flip operation and describe any interesting implementation / debugging tricks you have used.
+			</li>
+		</ul>
+			To understand the edge flip, I planned out which mesh elements needed to be updated. Following the diagram in the spec, both faces and the b, c vertices may need to update the halfedge. The ‘next’ attribute must be updated for all halfedges, while halfedges a->b, d->c also need the correct face. In my implementation, the flipped edge halfedges only needed to update next and vertex. Surprisingly, this worked.
+		<ul>
+			<li>
+				Show screenshots of the teapot before and after some edge flips.
+			</li>
+		</ul>
 
-		<h3>Part 5: Edge split</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-			
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
-		<div style="display: flex; flex-direction: column; align-items: center;">
+			<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="s2p4-1.png" width="400px"/>
+				  <figcaption>Before</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-			  </tr>
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="s2p4-2.png" width="400px"/>
+				  <figcaption>After</figcaption>
 				</td>
 			  </tr>
 			</table>
 		</div>
+			
+		<ul>
+			<li>
+				Write about your eventful debugging journey, if you have experienced one.
+			</li>
+		</ul>
+		<figure>
+			<img src="s2p4-what.png" alt="What" style="width:50%"/>
+		</figure>
+		Not quite sure what's happening here, but it looks cool. As for debugging...I just deleted my code and redid it. ദ്ദി╥ ᴗ ╥)
+
+		<h3>Part 5: Edge split</h3>
+		<ul>
+			<li>
+				Briefly explain how you implemented the edge split operation and describe any interesting implementation / debugging tricks you have used.
+			</li>
+		</ul>
+		Again, I start with determining which mesh elements need to be added and updated. Then, create a reference for any element that needs to be edited, and assign pointers. <br>
+		I split the process into two parts to better support boundary edge splits. First, the creation of a midpoint m. This also creates an edge and two halfedges. The faces remain the same, and your triangle mesh temporarily has two quads. Then, we split one side of this new edge. This creates one edge, two halfedges, and one face. I created a helper function (adding a header into HalfEdgeMesh.h) so boundary checking can simply call (or not call) the helper function for normal (and boundary) edge sides. 
+
+		<ul>
+			<li>
+				Show screenshots of a mesh before and after some edge splits, then a combination of both edge splits and edge flips.
+			</li>
+		</ul>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="s2p5-before.png" width="400px"/>
+				  <figcaption>Before</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="s2p5-split.png" width="400px"/>
+				  <figcaption>With Edge Splits</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="s2p5-splitflip.png" width="400px"/>
+				  <figcaption>With Edge Splits and Flips</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+			
+		<ul>
+			<li>
+				If you have implemented support for boundary edges, show screenshots of your implementation properly handling split operations on boundary edges.
+			</li>
+		</ul>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="s2p5-bound1.png" width="400px"/>
+				  <figcaption>Before</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="s2p5-bound2.png" width="400px"/>
+				  <figcaption>After</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+			
+		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
+		<ul>
+			<li>
+				Briefly explain how you implemented the loop subdivision and describe any interesting implementation / debugging tricks you have used.
+			</li>
+		</ul>
+This part requires little thinking as the steps are already laid out. As recommended, I start by calculating vertex positions after loop subdivision. This involves two loops over the mesh: one over vertices for old vertex positions, and one over edges for new vertex positions. Then, I split each existing edge in the mesh. Initially, I just checked if the edge was marked isNew; this led to an infinite loop because a split edge is not registered as new, but is not meant to split again. Instead, check if either vertex on the end of the edge isNew, since only and all preexisting edges will have 2 old vertices. Next, loop over edges again to flip isNew edges with one old and one new vertex. Lastly, update all vertices with their newPosition attribute.
+
+			
+		<ul>
+			<li>
+				Take some notes, as well as some screenshots, of your observations on how meshes behave after loop subdivision. What happens to sharp corners and edges? Can you reduce this effect by pre-splitting some edges?
+			</li>
+		</ul>
+		Sharp corners and edges get rounded out in a way that isn’t representative of the original mesh. Pre-splitting edges can reduce to a certain extent, but can create other kinds of distortions in the mesh. Pre splitting works best when you split the edge line you are trying to observe, as opposed to placing more mesh lines in a similar direction. As shown below, this creates a jagged but 'straight' edge for the cube. 
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <figcaption>Edges Aligned with Cube Edge</figcaption>
+				  <img src="s2p6-along1.png" width="400px"/>
+				</td>
+				<td style="text-align: center;">
+				  <figcaption>Edges Crossing Cube Edge</figcaption>
+				  <img src="s2p6-against1.png" width="400px"/>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="s2p6-along2.png" width="400px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="s2p6-against2.png" width="400px"/>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<ul>
+			<li>Load dae/cube.dae. Perform several iterations of loop subdivision on the cube. Notice that the cube becomes slightly asymmetric after repeated subdivisions. Can you pre-process the cube with edge flips and splits so that the cube subdivides symmetrically? Document these effects and explain why they occur. Also explain how your pre-processing helps alleviate the effects.</li>
+		</ul>
+		The cube becomes asymmetric after subdivision because the mesh is not symmetric. The tilt is along the diagonal edge of each face. To get symmetric subdivision, the mesh simply needs to be more symmetric as well. Split the diagonal edge across each face so no corner is ‘favored’ before subdividing.
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="s2p6-cube1.png" width="400px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="s2p6-cube2.png" width="400px"/>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="s2p6-cube3.png" width="400px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="s2p6-cube4.png" width="400px"/>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h2>Featured Suffering</h2>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="s2p6-help1a.png" width="400px"/>
+				  <figcaption>【˶ˆᗜˆ˵ 】</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="s2p6-help1b.png" width="400px"/>
+				  <figcaption>【・_・?】</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+			
 		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
