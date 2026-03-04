@@ -27,20 +27,20 @@
 	</head>
 	<body>
 		<div class="container">
-		<h1>CS184/284A Spring 2025 Homework 2 Write-Up</h1>
-		<div style="text-align: center;">Names: </div>
+		<h1>CS184/284A Spring 2026 Homework 2 Write-Up</h1>
+		<div style="text-align: center;">Name: Sophia Liu</div>
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-vlissomar/hw2/index.html">https://cal-cs184-student.github.io/hw-webpages-vlissomar/hw2/index.html</a>
 
 		<br>
 		
-		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to GitHub repository: <a href="https://github.com/cal-cs184-student/hw2-meshedit-vl2">https://github.com/cal-cs184-student/hw2-meshedit-vl2</a>
 
 		<figure>
 			<img src="teapot.png" alt="Teapot" style="width:50%"/>
-			<figcaption>You can add images with captions!</figcaption>
+			<figcaption>Hello!</figcaption>
 		</figure>
 
 		<!--
@@ -48,13 +48,137 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+		In this homework, I learned the basics of what's lying under the hood when I play 3D games. Each object is modeled with a 3D triangle mesh, glued together by halfedges. I was initially skeptical how halfedges could work since some rules seemed arbitrary. For example, how non HalfEdge meshelements only needed to point to any one of their related halfedges. But using these rules, I was able to traverse around the mesh to perform complex operations, like Loop Subdivision. 
 
 		<h2>Section I: Bezier Curves and Surfaces</h2>
 
 		<h3>Part 1: Bezier curves with 1D de Casteljau subdivision</h3>
+		<ul>
+			<li>Briefly explain de Casteljau’s algorithm and how you implemented it in order to evaluate Bezier curves.</li>
+		</ul>
+		Casteljau’s algorithm puts a slider between each consecutive pair of n control points to create n - 1 intermediary points, repeating until there is only 1 point left. These sliders use the same input t as a measure of how far along the intermediary point is between the preceding and following points. Then, to draw out the curve, we take the path traced by the last point as t slides from 0 to 1. <br>
+	For my implementation, I am only responsible for evaluating each step (creating new control points). I iterate over the vector of 2D points while tracking the point from the previous iteration. Then, I simply plug in the previous point p0 and the current point p into our lerp expression: (1 - 5) * p0 + t * p, and append the new point into our returning vector. 
+		<ul>
+			<li>Take a look at the provided .bzc files and create your own Bezier curve with 6 control points of your choosing. Use this Bezier curve for your screenshots below.
+			<ul>
+				<li>
+					Show screenshots of each step / level of the evaluation from the original control points down to the final evaluated point. Press E to step through. Toggle C to show the completed Bezier curve as well.
+				</li>
+				<li>
+					Show a screenshot of a slightly different Bezier curve by moving the original control points around and modifying the parameter t via mouse scrolling.
+				</li>
+			</li>
+		</ul>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="s1p1-mycurve1.png" width="400px"/>
+				  <figcaption>Start</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="s1p1-mycurve2.png" width="400px"/>
+				  <figcaption>Step 1</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="s1p1-mycurve3.png" width="400px"/>
+				  <figcaption>Step 2</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="s1p1-mycurve4.png" width="400px"/>
+				  <figcaption>Step 3</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="s1p1-mycurve5.png" width="400px"/>
+				  <figcaption>Step 4</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="s1p1-mycurve6.png" width="400px"/>
+				  <figcaption>Step 5</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<figure>
+			<img src="s1p1-diff_curv.png" alt="Different Curve" style="width:50%"/>
+			<figcaption>Different Curve</figcaption>
+		</figure>
+		
+		<h3>Part 2: Bezier surfaces with separable 1D de Casteljau</h3>
+		<ul>
+			<li>Briefly explain how de Casteljau algorithm extends to Bezier surfaces and how you implemented it in order to evaluate Bezier surfaces.</li>
+		</ul>
+		To get a Bezier surface with de Casteljau’s algorithm, start with the typical algorithm along one dimension. Then, using a cross section of these curves as control points, apply the algorithm again along the remaining dimension. This produces a smooth curved surface, since each cross section should have points very close to the previous one, so each curve is connected to the previous one. <br>
+			
+The implementation in the homework only requires the code to find where the point is in 3D when given the interpolation ‘slider’ values, u and v. As outlined above, collect the control points from the 1D Bezier point at u from the inner vectors of controlPoints, then return the 1D Bezier point at v from these control points.
+		<ul>
+			<li>Show a screenshot of bez/teapot.bez (not .dae) evaluated by your implementation.</li>
+		</ul>
+
+		<figure>
+			<img src="s1p2.png" alt="teapot.bez render" style="width:50%"/>
+			<figcaption>bez/teapot.bez</figcaption>
+		</figure>
+
+			
+		<h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
+
+		<h3>Part 3: Area-weighted vertex normals</h3>
+		<ul>
+			<li>Briefly explain how you implemented the area-weighted vertex normals.</li>
+		</ul>
+My implementation assumes that the given vertex is not a boundary vertex. To compute area-weighted vertex normals, I iterate through the halfedges of the vertex using a while loop, updating the current ‘focus’ halfedge curr to be curr->twin()->next(). For each curr halfedge, I record the vertices of its associated triangle, then calculate the crossproduct of (B - A, C - A) where A, B, C are vertex positions. This cross product has a convenient quality of having a direction along the normal vector and a magnitude equal to twice the triangle area, and can be directly accumulated in our vertex’s normal vector. The constant scaling factor of 2 can be ignored since the function returns a normalized unit vector. 
+		<ul>
+			<li>Show screenshots of dae/teapot.dae (not .bez) comparing teapot shading with and without vertex normals. Use Q to toggle default flat shading and Phong shading.</li>
+		</ul>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <figcaption>Flat</figcaption>
+				  <img src="s2p3-1f.png" width="400px"/>
+				</td>
+				<td style="text-align: center;">
+				  <figcaption>Phong</figcaption>
+				  <img src="s2p3-1p.png" width="400px"/>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="s2p3-2f.png" width="400px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="s2p3-2p.png" width="400px"/>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="s2p3-3f.png" width="400px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="s2p3-3p.png" width="400px"/>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<h3>Part 4: Edge flip</h3>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
+		<h3>Part 5: Edge split</h3>
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+			
 		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
@@ -80,24 +204,6 @@
 			  </tr>
 			</table>
 		</div>
-
-		<h3>Part 2: Bezier surfaces with separable 1D de Casteljau</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
-
-		<h3>Part 3: Area-weighted vertex normals</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<h3>Part 4: Edge flip</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<h3>Part 5: Edge split</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
 		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
