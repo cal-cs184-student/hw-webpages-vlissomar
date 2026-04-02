@@ -120,6 +120,33 @@
 			<li>Compare rendering times on a few scenes with moderately complex geometries with and without BVH acceleration. Present your results in a one-paragraph analysis.</li>
 		</ul>
 	&emsp;The peter.dae and building.dae collada files both have around 40,000 primitives, while the maxplanck.dae file has around 50,000. Naturally, the maxplanck file always takes the longest rendering time, with and without BVH acceleration. Without a BVH, the intersection algorithm intersects the ray with all primitives in the scene, which is likely why peter.dae and building.dae take around the same time. Using a BVH, all rendering times lower dramatically, from 3-4 minutes to under half a second. Something surprising is that peter.dae takes around 1.5 times the time of building.dae to render with BVH acceleration. I think this is due to the difference in shape, as a face/bust (peter.dae) is in a sense ‘flatter’ than the building structure with beams/wheels that can have many intersections inside a 3D bounding box.
+		<table>
+			<tr>
+				<th>file name</th>
+				<th># primitives</th>
+				<th>render time (s)</th>
+				<th>BVH render time (s)</th>
+			</tr>
+			<tr>
+				<td>/dae/keenan/building.dae</td>
+				<td>39,506</td>
+				<td>201.9881</td>
+				<td>0.1100</td>
+			</tr>
+			<tr>
+				<td>/dae/meshedit/peter.dae</td>
+				<td>40,018</td>
+				<td>206.3749</td>
+				<td>0.1167</td>
+			</tr>
+			<tr>
+				<td>/dae/meshedit/maxplanck.dae</td>
+				<td>50,801</td>
+				<td>260.2687</td>
+				<td>0.3483</td>
+			</tr>
+		</table>
+		<!--	
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
@@ -150,7 +177,7 @@
 			  </tr>
 			</table>
 		</div>
-			
+		-->
 			
 		<h2>Part 3: Direct Illumination</h2>
 		<ul>
